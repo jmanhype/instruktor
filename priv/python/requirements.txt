@@ -1,0 +1,5 @@
+playwright>=1.50.0
+git+https://github.com/jmanhype/proxy-lite.git
+psutil==5.9.8
+requests==2.31.0
+pydantic>=2.0.0 
