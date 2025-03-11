@@ -40,6 +40,29 @@ The system can be configured through environment variables:
 - `LLAMA_HOST` - Host for the Llama.cpp server (default: 127.0.0.1)
 - `LLAMA_PORT` - Port for the Llama.cpp server (default: 8090)
 
+## Docker Integration
+
+This package is fully containerized and can be run using Docker without installing anything locally:
+
+```bash
+# Build and run using Docker
+make docker-build
+make docker-run CMD="status"
+
+# Run specific commands
+make docker-search QUERY="capital of Japan"
+make docker-screenshot URL="https://example.com"
+make docker-extract URL="https://example.com" SCHEMA=Article
+```
+
+The Docker image includes:
+- All Python dependencies
+- Playwright with Chromium browser
+- Supports mounting local model directories
+- All output files (screenshots, extracted data) are saved to the `./output` directory
+
+See the [main README](../../README.md) for more details on Docker usage.
+
 ## Usage Examples
 
 ### Web Automation

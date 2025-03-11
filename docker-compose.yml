@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  instruktor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: instruktor:latest
+    container_name: instruktor
+    volumes:
+      # Mount local model directory to container
+      - ${LLAMA_MODELS_DIR:-./models}:/app/models
+      # Mount a directory for output files (screenshots, extracted data)
+      - ${OUTPUT_DIR:-./output}:/app/output
+    ports:
+      # Llama server port
+      - "8090:8090"
+      # Proxy server port
+      - "8765:8765"
+      # Web interface port (if any)
+      - "4000:4000"
+    environment:
+      - LLAMA_MODELS_DIR=/app/models
+      - LLAMA_DEFAULT_MODEL=${LLAMA_DEFAULT_MODEL:-qwen2.5-7b-instruct.Q4_K_M.gguf}
+      - LLAMA_HOST=0.0.0.0
+      - LLAMA_PORT=8090
+    # Use a healthcheck to ensure the container is functioning properly
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/v1/models"] 
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    # Restart policy
+    restart: unless-stopped 

@@ -1,0 +1,65 @@
+# Version control
+.git/
+.gitignore
+.github/
+
+# Elixir build artifacts
+_build/
+deps/
+*.ez
+
+# Generated files
+*.beam
+*.plt
+erl_crash.dump
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+venv/
+ENV/
+
+# Local model and output directories
+models/
+output/
+screenshots/
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Docker files (avoid recursion)
+.dockerignore
+
+# Logs
+*.log
+logs/
+tmp/
+
+# Other
+node_modules/
+.DS_Store 

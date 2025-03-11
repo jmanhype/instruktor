@@ -1,164 +1,242 @@
 # Instruktor
 
-Instruktor is a powerful web automation and structured data extraction platform that combines the strengths of Elixir and Python to provide a robust system for browser automation, data processing, and LLM-powered extraction.
+A toolkit for automating web browsing and data extraction with AI assistants.
 
 ## Overview
 
-This project provides a unified system for:
+Instruktor combines Elixir and Python to provide a powerful framework for web automation, data extraction, and AI-guided browsing. It integrates with llama.cpp for local LLM inference and uses browser automation to navigate the web.
+
+## Features
 
 - Web automation using Playwright
-- Structured data extraction using LLMs
-- Integration with local LLM models via Llama.cpp
-- Background job processing with Oban
-- A clean Elixir interface to Python functionality
+- Structured data extraction with LLMs
+- Proxy-based architecture for clean API
+- Local LLM inference with llama.cpp
+- Easy-to-use CLI utility
 
-## Architecture
+## Quick Start
 
-The architecture consists of two main components:
+### Installation
 
-1. **Elixir Core** - Provides the API, job scheduling, data validation, and coordination
-2. **Python Workers** - Handle browser automation, LLM interaction, and data extraction
-
-```
-┌────────────────────────┐         ┌────────────────────────┐
-│                        │         │                        │
-│    Elixir Core         │         │    Python Workers      │
-│                        │         │                        │
-│  ┌─────────────────┐   │         │  ┌─────────────────┐   │
-│  │                 │   │         │  │                 │   │
-│  │   API Layer     │   │         │  │  Web Automation │   │
-│  │                 │   │         │  │                 │   │
-│  └────────┬────────┘   │         │  └────────┬────────┘   │
-│           │            │         │           │            │
-│  ┌────────▼────────┐   │         │  ┌────────▼────────┐   │
-│  │                 │   │         │  │                 │   │
-│  │   Job Queue     │ ──┼─────────┼─▶│  LLM Interface  │   │
-│  │                 │   │         │  │                 │   │
-│  └────────┬────────┘   │         │  └────────┬────────┘   │
-│           │            │         │           │            │
-│  ┌────────▼────────┐   │         │  ┌────────▼────────┐   │
-│  │                 │   │         │  │                 │   │
-│  │ Data Validation │   │         │  │ Data Extraction │   │
-│  │                 │   │         │  │                 │   │
-│  └─────────────────┘   │         │  └─────────────────┘   │
-│                        │         │                        │
-└────────────────────────┘         └────────────────────────┘
-```
-
-## Installation
-
-### Prerequisites
-
-- Elixir 1.14+
-- Python 3.8+
-- [Llama.cpp](https://github.com/ggerganov/llama.cpp) (optional)
-- LLM models (either local or via API)
-
-### Setup
-
-1. Clone the repository
-
+1. Clone this repository:
 ```bash
 git clone https://github.com/yourusername/instruktor.git
 cd instruktor
 ```
 
-2. Install Elixir dependencies
-
+2. Run the installation script:
 ```bash
-mix deps.get
+./install.sh
 ```
 
-3. Set up the Python environment
+This will:
+- Install the Instruktor CLI to your system (either system-wide or user-level)
+- Make it available in your PATH
+- Optionally run the setup command to install all required dependencies
 
+To uninstall the CLI:
 ```bash
-cd priv/python
-./setup.sh
+./install.sh --uninstall
 ```
 
-4. Configure your environment (see Configuration section)
-
-5. Start the application
-
+Alternatively, you can manually set up dependencies:
 ```bash
-mix run --no-halt
+./instruktor setup
 ```
 
-## Configuration
+This will install all Elixir and Python dependencies, including Playwright.
 
-Configuration is managed through environment variables and application config:
+### Using the CLI
 
-### Elixir Config
+Instruktor comes with a convenient command-line interface:
 
-Configure your application in `config/config.exs` or use environment-specific configs.
+```bash
+# Show help
+./instruktor help
 
-### Python Config
+# Check status of servers
+./instruktor status
 
-Python configuration uses environment variables:
+# Start the llama.cpp server
+./instruktor server
 
-- `LLAMA_CPP_DIR` - Path to the Llama.cpp installation
-- `LLAMA_MODELS_DIR` - Path to the directory containing LLM models
-- `LLAMA_DEFAULT_MODEL` - Default model to use
-- `LLAMA_HOST` - Host for the Llama.cpp server
-- `LLAMA_PORT` - Port for the Llama.cpp server
+# Start only the proxy server
+./instruktor proxy
 
-## Features
+# Start the full application in IEx
+./instruktor start
 
-### Web Automation
+# Run tests
+./instruktor test
 
-- Browser session management
-- Navigation and interaction
-- Screenshot capture
-- Content extraction
-- Headless or visible mode
+# Run a web search query
+./instruktor search "capital of Japan"
 
-### Structured Data Extraction
+# Run a search with a specific homepage
+./instruktor search "population of Tokyo" --homepage https://www.cia.gov/the-world-factbook/
 
-- Extract structured data using LLMs
-- Define custom Pydantic models for extraction
-- Support for multiple LLM providers
+# Take a screenshot of a website
+./instruktor screenshot https://example.com --output example.png
 
-### LLM Integration
+# Extract structured data from a website
+./instruktor extract https://example.com --schema Article --output result.json
 
-- Support for local Llama.cpp models
-- Configurable model parameters
-- Extensible for other LLM providers
+# Show version information
+./instruktor version
 
-## Components
+# Generate shell completion
+./instruktor completion bash  # or zsh, fish
+```
 
-### Elixir Components
+### Using the Makefile
 
-- `Instruktor.WebAutomation` - Interface to the Python web automation functionality
-- `Instruktor.LLM` - Interface to the LLM capabilities
-- `Instruktor.Schemas` - Data structures and validations
-- `Instruktor.Workers` - Background job processing
+For those who prefer using `make` commands, Instruktor also provides a comprehensive Makefile:
 
-### Python Components
+```bash
+# Show available targets
+make help
 
-- `web_automation.py` - Browser automation using Playwright
-- `structured_extraction.py` - Structured data extraction using LLMs
-- `llama_server.py` - Llama.cpp server management
+# Install all dependencies
+make setup
 
-## Documentation
+# Start the application
+make start
 
-Additional documentation:
+# Run a web search query
+make search QUERY="capital of Japan"
 
-- [Python Components](priv/python/README.md)
-- [API Documentation](docs/api.md)
-- [Configuration Guide](docs/configuration.md)
+# Run a search with a specific homepage
+make search QUERY="population of Tokyo" HOMEPAGE="https://www.cia.gov/the-world-factbook/"
 
-## Development
+# Take a screenshot of a website
+make screenshot URL="https://example.com" OUTPUT="example.png"
+
+# Take a full-page screenshot with custom dimensions
+make screenshot URL="https://example.com" FULLPAGE=true WIDTH=1920 HEIGHT=1080
+
+# Extract structured data from a website
+make extract URL="https://example.com" SCHEMA=Article OUTPUT="result.json"
+
+# Check server status
+make status
+
+# Build the Elixir application
+make build
+
+# Install the CLI globally
+make install
+
+# Clean up temporary files
+make clean
+```
+
+The Makefile provides a consistent interface across different environments and simplifies common development tasks.
+
+### Docker Integration
+
+Instruktor can also be run in containers using Docker, which simplifies deployment and ensures consistent environments:
+
+#### Using Docker Directly
+
+```bash
+# Build the Docker image
+make docker-build
+
+# Run a search query in Docker
+make docker-search QUERY="capital of Japan"
+
+# Take a screenshot in Docker
+make docker-screenshot URL="https://example.com" OUTPUT="screenshot.png"
+
+# Extract data in Docker
+make docker-extract URL="https://example.com" SCHEMA=Article OUTPUT="result.json"
+```
+
+#### Using Docker Compose
+
+```bash
+# Start all services with docker-compose
+make docker-up
+
+# Stop all services
+make docker-down
+
+# Clean up Docker resources
+make docker-clean
+```
+
+#### Docker Configuration
+
+The Docker setup includes:
+
+- Elixir and Python environments with all dependencies
+- Playwright with Chromium browser
+- Volume mounts for models and output files
+- Port mappings for all services (8090, 8765, 4000)
+- Health checks to ensure services are running properly
+
+You can customize the Docker environment by modifying:
+
+- `Dockerfile` - Container build instructions
+- `docker-compose.yml` - Service configuration
+- Environment variables:
+  - `LLAMA_MODELS_DIR` - Directory for LLM models
+  - `LLAMA_DEFAULT_MODEL` - Default model name
+  - `OUTPUT_DIR` - Directory for output files
+
+### Running the Server Manually
+
+If you prefer to run components individually:
+
+Start the llama.cpp server:
+```bash
+./scripts/start_llama_server.sh
+```
+
+Start the Elixir application:
+```bash
+iex -S mix
+```
 
 ### Running Tests
 
+We provide a simple test script that verifies the entire system works correctly:
+
 ```bash
-mix test
+./scripts/run_test.sh
 ```
 
-### Adding New Extractors
+This will:
+1. Start the llama.cpp server (if not already running)
+2. Start the proxy server
+3. Run test queries to verify everything works
 
-Define your extraction schemas in `lib/instruktor/schemas/` and implement any necessary extraction logic in the Python components.
+See `scripts/README.md` for detailed information about all available scripts.
+
+## Usage Examples in Elixir
+
+```elixir
+# Search for information
+Instruktor.WebAutomation.search("capital of Japan")
+
+# Run the proxy lite with options
+Instruktor.WebAutomation.run_proxy_lite("population of France", %{headless: true})
+```
+
+## Project Structure
+
+- `lib/` - Elixir code
+  - `lib/instruktor/web_automation.ex` - Web automation interface
+  - `lib/instruktor/services/` - Server management
+- `priv/python/` - Python code
+  - `proxy_lite_example.py` - Main proxy implementation
+- `scripts/` - Helper scripts for running and testing
+- `instruktor` - CLI utility for easy interaction with the application
+
+## Development
+
+See the [contributing guide](CONTRIBUTING.md) for details on how to contribute to Instruktor.
 
 ## License
 
-[Include license information here] 
+This project is licensed under the [MIT License](LICENSE). 
