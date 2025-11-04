@@ -17,6 +17,7 @@ __pycache__/
 *.so
 .Python
 priv/python/venv/
+priv/python/sessions/
 .env
 .venv
 env/
@@ -26,6 +27,22 @@ env.bak/
 venv.bak/
 .pytest_cache/
 .ipynb_checkpoints
+*.pyc
+
+# LLM models and data
+llama_models/
+*.gguf
+*.bin
+*.safetensors
+
+# Screenshots and session data
+*.png
+*.jpg
+*.jpeg
+priv/python/sessions/
+
+# Logs
+*.log
 
 # OS specific
 .DS_Store
@@ -42,4 +59,16 @@ Thumbs.db
 *~
 .idea/
 .vscode/
-*.sublime-workspace 
+*.sublime-workspace
+*.sublime-project
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets and credentials
+.env.local
+.env.*.local
+credentials.json
+secrets.yaml 
